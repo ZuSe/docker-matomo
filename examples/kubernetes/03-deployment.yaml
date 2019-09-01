@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
           # In production you should set a specific tag
-        - image: crazymax/matomo:latest
+        - image: ppalacin/matomo-advanced:latest
           imagePullPolicy: Always
           name: matomo
           env:
