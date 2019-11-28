@@ -1,4 +1,5 @@
-FROM nginx:stable-alpine
+# syntax=docker/dockerfile:experimental
+FROM --platform=${TARGETPLATFORM:-linux/amd64} nginx:mainline-alpine
 
 ARG BUILD_DATE
 ARG VCS_REF
@@ -30,7 +31,7 @@ RUN apk --update --no-cache add -t build-dependencies \
     pcre-dev \
     perl-dev \
     zlib-dev \
-  && mkdir -p /usr/src \
+  && mkdir -p /usr/src /var/lib/nginx/body /var/lib/nginx/fastcgi \
   && cd /usr/src \
   && wget http://nginx.org/download/nginx-$NGINX_VERSION.tar.gz \
   && tar zxvf nginx-$NGINX_VERSION.tar.gz \
@@ -84,8 +85,9 @@ RUN cd /tmp \
   && mv *.mmdb /etc/nginx/geoip \
   && rm -rf /tmp/*
 
-ENV MATOMO_VERSION="3.11.0" \
-  CRONTAB_PATH="/var/spool/cron/crontabs"
+ENV MATOMO_VERSION="3.13.0" \
+  CRONTAB_PATH="/var/spool/cron/crontabs" \
+  TZ="UTC"
 
 RUN apk --update --no-cache add -t build-dependencies \
     ca-certificates gnupg libressl tar \
@@ -100,7 +102,7 @@ RUN apk --update --no-cache add -t build-dependencies \
   && wget -q https://matomo.org/wp-content/uploads/unifont.ttf.zip \
   && unzip unifont.ttf.zip -d /var/www/plugins/ImageGraph/fonts/ \
   && rm unifont.ttf.zip \
-  && chown -R nginx. /etc/nginx /usr/lib/nginx /var/cache/nginx /var/log/nginx /var/log/php7 /var/www \
+  && chown -R nginx. /etc/nginx /usr/lib/nginx /var/cache/nginx /var/lib/nginx /var/log/nginx /var/log/php7 /var/www \
   && apk del build-dependencies \
   && rm -rf /root/.gnupg /tmp/* /var/cache/apk/*
 

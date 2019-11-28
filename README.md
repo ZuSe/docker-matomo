@@ -1,14 +1,13 @@
-<p align="center"><a href="https://github.com/crazy-max/docker-matomo" target="_blank"><img height="128"src="https://raw.githubusercontent.com/crazy-max/docker-matomo/master/.res/docker-matomo.jpg"></a></p>
+<p align="center"><a href="https://github.com/crazy-max/docker-matomo" target="_blank"><img height="128" src="https://raw.githubusercontent.com/crazy-max/docker-matomo/master/.res/docker-matomo.jpg"></a></p>
 
 <p align="center">
-  <a href="https://hub.docker.com/r/crazymax/matomo/"><img src="https://img.shields.io/badge/dynamic/json.svg?label=version&query=$.results[1].name&url=https://hub.docker.com/v2/repositories/crazymax/matomo/tags&style=flat-square" alt="Latest Version"></a>
-  <a href="https://travis-ci.com/crazy-max/docker-matomo"><img src="https://img.shields.io/travis/com/crazy-max/docker-matomo/master.svg?style=flat-square" alt="Build Status"></a>
+  <a href="https://hub.docker.com/r/crazymax/matomo/tags?page=1&ordering=last_updated"><img src="https://img.shields.io/github/v/tag/crazy-max/docker-matomo?label=version&style=flat-square" alt="Latest Version"></a>
+  <a href="https://github.com/crazy-max/docker-matomo/actions?workflow=build"><img src="https://github.com/crazy-max/docker-matomo/workflows/build/badge.svg" alt="Build Status"></a>
   <a href="https://hub.docker.com/r/crazymax/matomo/"><img src="https://img.shields.io/docker/stars/crazymax/matomo.svg?style=flat-square" alt="Docker Stars"></a>
   <a href="https://hub.docker.com/r/crazymax/matomo/"><img src="https://img.shields.io/docker/pulls/crazymax/matomo.svg?style=flat-square" alt="Docker Pulls"></a>
-  <a href="https://quay.io/repository/crazymax/matomo"><img src="https://quay.io/repository/crazymax/matomo/status?style=flat-square" alt="Docker Repository on Quay"></a>
   <a href="https://www.codacy.com/app/crazy-max/docker-matomo"><img src="https://img.shields.io/codacy/grade/c6bb409d02314ecf9928750de89d9d8c.svg?style=flat-square" alt="Code Quality"></a>
-  <br /><a href="https://www.patreon.com/crazymax"><img src="https://img.shields.io/badge/donate-patreon-fb664e.svg?style=flat-square" alt="Support me on Patreon"></a>
-  <a href="https://www.paypal.me/crazyws"><img src="https://img.shields.io/badge/donate-paypal-7057ff.svg?style=flat-square" alt="Donate Paypal"></a>
+  <br /><a href="https://github.com/sponsors/crazy-max"><img src="https://img.shields.io/badge/sponsor-crazy--max-181717.svg?logo=github&style=flat-square" alt="Become a sponsor"></a>
+  <a href="https://www.paypal.me/crazyws"><img src="https://img.shields.io/badge/donate-paypal-00457c.svg?logo=paypal&style=flat-square" alt="Donate Paypal"></a>
 </p>
 
 ## About
@@ -20,9 +19,7 @@ If you are interested, [check out](https://hub.docker.com/r/crazymax/) my other 
 
 ## Features
 
-### Included
-
-* Alpine Linux 3.10, Nginx, PHP 7.3
+* Multi-platform image
 * Tarball authenticity checked during building process
 * Config, plugins and user preferences in the same folder
 * GeoIP 2 databases created by [MaxMind](http://www.maxmind.com) for geolocation
@@ -33,15 +30,29 @@ If you are interested, [check out](https://hub.docker.com/r/crazymax/) my other 
 * [SSMTP](https://linux.die.net/man/8/ssmtp) for SMTP relay to send emails
 * OPCache enabled to store precompiled script bytecode in shared memory
 * Redis enabled and ready to enhance server performance
-
-### From docker-compose
-
 * [Traefik](https://github.com/containous/traefik-library-image) as reverse proxy and creation/renewal of Let's Encrypt certificates
 * [Redis](https://github.com/docker-library/redis) image ready to use as [Redis cache](https://matomo.org/faq/how-to/faq_20511/) or [QueuedTracking plugin](https://matomo.org/faq/how-to/faq_19738) for better scalability
 * [MariaDB](https://github.com/docker-library/mariadb) image as database instance
 * Cron jobs as a ["sidecar" container](#cron)
 
 ## Docker
+
+### Multi-platform image
+
+Following platforms for this image are available:
+
+```
+$ docker run --rm mplatform/mquery crazymax/matomo:latest
+Image: crazymax/matomo:latest
+ * Manifest List: Yes
+ * Supported platforms:
+   - linux/amd64
+   - linux/arm/v6
+   - linux/arm64
+   - linux/386
+   - linux/ppc64le
+   - linux/s390x
+```
 
 ### Environment variables
 
@@ -76,7 +87,7 @@ The following environment variables are only used if you run the container as ["
 
 * `8000` : HTTP port
 
-## Use this image
+## Usage
 
 ### Docker Compose
 
@@ -122,6 +133,7 @@ If you want to enable the cron job, you have to run a "sidecar" container like i
 ```bash
 docker run -d --name matomo_cron \
   --env-file $(pwd)/matomo.env \
+  --no-healthcheck \
   -e "SIDECAR_CRON=1" \
   -e "CRON_ARCHIVE=0 * * * *" \
   -e "ARCHIVE_OPTIONS=--concurrent-requests-per-website=3" \
@@ -197,12 +209,9 @@ docker-compose up -d
 
 ## How can I help ?
 
-All kinds of contributions are welcome :raised_hands:!<br />
-The most basic way to show your support is to star :star2: the project, or to raise issues :speech_balloon:<br />
-But we're not gonna lie to each other, I'd rather you buy me a beer or two :beers:!
+All kinds of contributions are welcome :raised_hands:! The most basic way to show your support is to star :star2: the project, or to raise issues :speech_balloon: You can also support this project by [**becoming a sponsor on GitHub**](https://github.com/sponsors/crazy-max) :clap: or by making a [Paypal donation](https://www.paypal.me/crazyws) to ensure this journey continues indefinitely! :rocket:
 
-[![Support me on Patreon](.res/patreon.png)](https://www.patreon.com/crazymax) 
-[![Paypal Donate](.res/paypal.png)](https://www.paypal.me/crazyws)
+Thanks again for your support, it is much appreciated! :pray:
 
 ## License
 

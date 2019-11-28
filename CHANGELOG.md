@@ -1,5 +1,26 @@
 # Changelog
 
+## 3.13.0-RC1 (2019/11/27)
+
+* Matomo 3.13.0
+
+## 3.12.0-RC1 (2019/10/29)
+
+* Matomo 3.12.0
+
+## 3.11.0-RC5 (2019/10/20)
+
+* Multi-platform Docker image
+* Switch to GitHub Actions
+* :warning: Stop publishing Docker image on Quay
+* Set timezone through tzdata
+* Use alpine mainline
+
+## 3.11.0-RC4 (2019/09/17)
+
+* Fix `/var/lib/nginx/`
+* Only populate AuthUser/Pass in ssmtp.conf if defined
+
 ## 3.11.0-RC3 (2019/08/08)
 
 * Fix healthcheck for cron

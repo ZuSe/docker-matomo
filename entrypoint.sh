@@ -4,8 +4,6 @@ function runas_nginx() {
   su - nginx -s /bin/sh -c "$1"
 }
 
-TZ=${TZ:-UTC}
-
 MEMORY_LIMIT=${MEMORY_LIMIT:-256M}
 UPLOAD_MAX_SIZE=${UPLOAD_MAX_SIZE:-16M}
 OPCACHE_MEM_SIZE=${OPCACHE_MEM_SIZE:-128}
@@ -19,11 +17,6 @@ SIDECAR_CRON=${SIDECAR_CRON:-0}
 SSMTP_PORT=${SSMTP_PORT:-25}
 SSMTP_HOSTNAME=${SSMTP_HOSTNAME:-$(hostname -f)}
 SSMTP_TLS=${SSMTP_TLS:-NO}
-
-# Timezone
-echo "Setting timezone to ${TZ}..."
-ln -snf /usr/share/zoneinfo/${TZ} /etc/localtime
-echo ${TZ} > /etc/timezone
 
 # PHP
 echo "Setting PHP-FPM configuration..."
@@ -53,11 +46,16 @@ else
 mailhub=${SSMTP_HOST}:${SSMTP_PORT}
 hostname=${SSMTP_HOSTNAME}
 FromLineOverride=YES
-AuthUser=${SSMTP_USER}
-AuthPass=${SSMTP_PASSWORD}
 UseTLS=${SSMTP_TLS}
 UseSTARTTLS=${SSMTP_TLS}
 EOL
+  # Authentication to SMTP server is optional.
+  if [ -n "$SSMTP_USER" ] ; then
+    cat >> /etc/ssmtp/ssmtp.conf <<EOL
+AuthUser=${SSMTP_USER}
+AuthPass=${SSMTP_PASSWORD}
+EOL
+  fi
 fi
 unset SSMTP_HOST
 unset SSMTP_USER
