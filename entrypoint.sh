@@ -63,7 +63,7 @@ unset SSMTP_PASSWORD
 
 # Init Matomo
 echo "Initializing Matomo files / folders..."
-mkdir -p /data/config /data/misc /data/plugins /data/session /data/tmp /etc/supervisord /var/log/supervisord
+mkdir -p /data/config /data/geoip /data/misc /data/plugins /data/session /data/tmp /etc/supervisord /var/log/supervisord
 
 # Copy global config
 cp -Rf /var/www/config /data/
@@ -85,8 +85,11 @@ if [ ! -d /data/misc/user ]; then
   if [[ ! -L /var/www/misc/user && -d /var/www/misc/user ]]; then
     mv -f /var/www/misc/user /data/misc/
   fi
-  ln -sf /data/misc/user /var/www/misc/user
+elif [[ ! -L /var/www/misc/user && -d /var/www/misc/user ]]; then
+  rm -rf /var/www/misc/user
 fi
+mkdir -p /data/misc/user
+ln -sf /data/misc/user /var/www/misc/user
 
 # Fix perms
 echo "Fixing permissions..."
@@ -104,17 +107,9 @@ if [ "$SIDECAR_CRON" = "1" ]; then
   mkdir -m 0644 -p ${CRONTAB_PATH}
   touch ${CRONTAB_PATH}/nginx
 
-  # GeoIP
-  if [ ! -z "$CRON_GEOIP" ]; then
-    echo "Creating GeoIP cron task with the following period fields : $CRON_GEOIP"
-    echo "${CRON_GEOIP} /usr/local/bin/update_geoip" >> ${CRONTAB_PATH}/nginx
-  else
-    echo "CRON_GEOIP env var empty..."
-  fi
-
   # Archive
   if [ ! -z "$CRON_ARCHIVE" ]; then
-    echo "Creating Matomo archive cron task with the following period fields : $CRON_ARCHIVE"
+    echo "Creating Matomo archive cron task with the following period fields: $CRON_ARCHIVE"
     echo "${CRON_ARCHIVE} /usr/local/bin/matomo_archive" >> ${CRONTAB_PATH}/nginx
   else
     echo "CRON_ARCHIVE env var empty..."
@@ -125,6 +120,29 @@ if [ "$SIDECAR_CRON" = "1" ]; then
   chmod -R 0644 ${CRONTAB_PATH}
 else
   rm /etc/supervisord/cron.conf
+
+  # GeoIP2 databases
+  if [ ! -s "/data/geoip/GeoLite2-ASN.mmdb" ]; then
+    cp -f /var/mmdb/GeoLite2-ASN.mmdb /data/geoip/
+  fi
+  if [ ! -s "/data/geoip/GeoLite2-City.mmdb" ]; then
+    cp -f /var/mmdb/GeoLite2-City.mmdb /data/geoip/
+  fi
+  if [ ! -s "/data/geoip/GeoLite2-Country.mmdb" ]; then
+    cp -f /var/mmdb/GeoLite2-Country.mmdb /data/geoip/
+  fi
+  chown -R nginx. /data/geoip
+
+  # Empty GeoIP2 Nginx config if no databases found
+  if [ ! -s "/data/geoip/GeoLite2-ASN.mmdb" ]; then
+    cat /dev/null > /etc/nginx/geoip2-asn.conf
+  fi
+  if [ ! -s "/data/geoip/GeoLite2-City.mmdb" ]; then
+    cat /dev/null > /etc/nginx/geoip2-city.conf
+  fi
+  if [ ! -s "/data/geoip/GeoLite2-Country.mmdb" ]; then
+    cat /dev/null > /etc/nginx/geoip2-country.conf
+  fi
 
   # Check if already installed
   if [ -f /data/config/config.ini.php ]; then

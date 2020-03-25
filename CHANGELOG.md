@@ -1,5 +1,45 @@
 # Changelog
 
+## 3.13.4-RC1 (2020/03/24)
+
+* Matomo 3.13.4
+
+## 3.13.3-RC1 (2020/02/24)
+
+* Matomo 3.13.3
+
+## 3.13.2-RC1 (2020/02/10)
+
+* Matomo 3.13.2
+
+## 3.13.1-RC6 (2020/01/24)
+
+* Move Nginx temp folders to `/tmp`
+
+## 3.13.1-RC5 (2020/01/17)
+
+* Matomo 3.13.1
+
+## 3.13.0-RC4 (2019/01/02)
+
+* Use [geoip-updater](https://github.com/crazy-max/geoip-updater) Docker image to download MaxMind's GeoIP2 databases
+
+> :warning: **UPGRADE NOTES**
+> `MAXMIND_LICENSE_KEY` and `CRON_GEOIP` env vars not used anymore.
+
+## 3.13.0-RC3 (2019/12/31)
+
+* Add `MAXMIND_LICENSE_KEY` env var in order to [download GeoLite2 databases](https://blog.maxmind.com/2019/12/18/significant-changes-to-accessing-and-using-geolite2-databases/)
+* Move GeoLite2 databases to `/data/geoip` folder
+* Fix remote ip for `MM_ADDR` and `MMDB_ADDR` fastcgi params
+
+> :warning: **UPGRADE NOTES**
+> GeoIP2 databases moved to `/data/geoip`.
+
+## 3.13.0-RC2 (2019/12/02)
+
+* Fix user misc data persistence (#31)
+
 ## 3.13.0-RC1 (2019/11/27)
 
 * Matomo 3.13.0
@@ -53,11 +93,11 @@
 ## 3.9.0-RC1 (2019/03/19)
 
 * Matomo 3.9.0
-* Enable gzip for type application/javascript (PR #17)
+* Enable gzip for type application/javascript (#17)
 
 ## 3.8.1-RC3 (2019/03/06)
 
-* Fix GeoIP2 autonomous system key (PR #16)
+* Fix GeoIP2 autonomous system key (#16)
 
 ## 3.8.1-RC2 (2019/02/10)
 
@@ -75,17 +115,17 @@
 
 ## 3.7.0-RC4 (2018/11/24)
 
-* `/js/` tracking codes not working (Issue #11)
+* `/js/` tracking codes not working (#11)
 
 ## 3.7.0-RC3 (2018/11/24)
 
-* Add `REAL_IP_FROM` and `REAL_IP_HEADER` environment variables (Issue #8)
+* Add `REAL_IP_FROM` and `REAL_IP_HEADER` environment variables (#8)
 * Typo for some fastcgi_param
 
 ## 3.7.0-RC2 (2018/11/23)
 
-* Add compatibility with [GeoIP 2 plugin](https://plugins.matomo.org/GeoIP2) (Issue #7)
-* Add GeoIP 2 databases Country, City and ASN
+* Add compatibility with [GeoIP2 plugin](https://plugins.matomo.org/GeoIP2) (#7)
+* Add GeoIP2 databases Country, City and ASN
 * Add [ngx_http_geoip2_module](https://github.com/leev/ngx_http_geoip2_module) nginx module
 * Move GeoIP databases to `/etc/nginx/geoip`
 
@@ -143,7 +183,7 @@
 
 ## 3.4.0-RC2 (2018/04/26)
 
-* Use IPv6 GeoIP databases (Issue #4)
+* Use IPv6 GeoIP databases (#4)
 
 ## 3.4.0-RC1 (2018/03/29)
 
@@ -167,7 +207,7 @@
 ## 3.3.0-RC6 (2018/02/26)
 
 * Add php7-ldap extension
-* Check config file (Issue #2)
+* Check config file (#2)
 * Fix permission issues
 
 ## 3.3.0-RC5 (2018/02/05)
