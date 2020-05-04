@@ -106,7 +106,7 @@ COPY rootfs /
 RUN chmod a+x /entrypoint.sh /usr/local/bin/* \
   && chown nginx. /var/www/bootstrap.php
 
-EXPOSE 8000
+EXPOSE 5000
 WORKDIR /var/www
 VOLUME [ "/data" ]
 
