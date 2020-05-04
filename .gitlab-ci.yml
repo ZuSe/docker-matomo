@@ -98,6 +98,19 @@ include:
     - auto-deploy persist_environment_url
   environment:
     name: production
-    url: http://insights.$KUBE_INGRESS_BASE_DOMAIN
+    url: http://metrics.$KUBE_INGRESS_BASE_DOMAIN
   artifacts:
     paths: [environment_url.txt]
+
+production:
+  <<: *production_template
+  only:
+    refs:
+      - master
+    kubernetes: active
+  except:
+    variables:
+      - $STAGING_ENABLED
+      - $CANARY_ENABLED
+      - $INCREMENTAL_ROLLOUT_ENABLED
+      - $INCREMENTAL_ROLLOUT_MODE
