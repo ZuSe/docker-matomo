@@ -41,17 +41,29 @@
 image: alpine:latest
 
 variables:
+  STAGING_ENABLED: 0
+  DEVELOPMENT_ENABLED: 0
+  REVIEW_ENABLED: 0
   DOCKER_DRIVER: overlay2
   ROLLOUT_RESOURCE_TYPE: deployment
   DOCKER_TLS_CERTDIR: ""  # https://gitlab.com/gitlab-org/gitlab-runner/issues/4501
 
 stages:
   - build
+  - unit_test
+  - test
+  - deploy  # dummy stage to follow the template guidelines
   - review
+  - dast
+  - staging
+  - canary
   - production
+  - incremental rollout 10%
+  - incremental rollout 25%
+  - incremental rollout 50%
+  - incremental rollout 100%
   - performance
   - cleanup
-
 workflow:
   rules:
     - if: '$BUILDPACK_URL || $AUTO_DEVOPS_EXPLICITLY_ENABLED == "1"'
