@@ -41,7 +41,6 @@
 image: alpine:latest
 
 variables:
-  STAGING_ENABLED: "False"
   DEVELOPMENT_ENABLED: "False"
   REVIEW_DISABLED: "True"
   DOCKER_DRIVER: overlay2
