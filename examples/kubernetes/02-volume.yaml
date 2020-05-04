@@ -1,11 +1,6 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  annotations:
-    volume.beta.kubernetes.io/storage-class: sata    # Storage type; Currently, EVS supports sas, ssd, and sata
-  labels:
-    failure-domain.beta.kubernetes.io/region: eu-de
-    failure-domain.beta.kubernetes.io/zone: eu-de-02
   name: matomo-data-pvc
   namespace: matomo
 spec:
