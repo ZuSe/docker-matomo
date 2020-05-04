@@ -47,6 +47,7 @@ variables:
 
 stages:
   - build
+  - review
   - production
   - performance
   - cleanup
