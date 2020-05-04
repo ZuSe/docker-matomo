@@ -99,5 +99,14 @@ items:
           {{- end }}
           resources:
 {{ toYaml $.Values.resources | indent 12 }}
+{{- if $.Values.persistence.enabled }}
+          volumeMounts:
+            - name: data
+              mountPath: {{ $.Values.persistence.mountPath }}
+        volumes:
+          - name: data
+            persistentVolumeClaim:
+              claimName: {{ $.Values.persistence.existingClaim | default (include "fullname" $) }}
+{{- end }}
 {{- end -}}
 {{- end -}}

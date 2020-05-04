@@ -67,3 +67,9 @@
 | prometheus.metrics            | Annotates the service for prometheus auto-discovery. Also denies access to the `/metrics` endpoint from external addresses with Ingress. | `false` |
 | networkPolicy.enabled         | Enable container network policy | `false` |
 | networkPolicy.spec            | [Network policy](https://kubernetes.io/docs/concepts/services-networking/network-policies/) definition | `{ podSelector: { matchLabels: {} }, ingress: [{ from: [{ podSelector: { matchLabels: {} } }, { namespaceSelector: { matchLabels: { app.gitlab.com/managed_by: gitlab } } }] }] }` |
+| persistence.enabled           | Enable mounting persistent volume claim as volume. | `false`                            |
+| persistence.existingClaim     | Name of an existing [persistent volume claim](https://kubernetes.io/docs/concepts/storage/persistent-volumes/#persistentvolumeclaims) to use.  Otherwise, a PVC will be automatically created. Warning: Auto-created PVCs are deleted any time `persistence.enabled` is set to `false` (manually managed claims are left alone). | `nil` |
+| persistence.storageClass      | Storage class of the PVC. | `default`                            |
+| persistence.accessMode        | Access mode to use for the PVC. | `ReadWriteOnce`                            |
+| persistence.size              | Size of the PVC. | `8Gi`                            |
+| persistence.mountPath         | Path on which the PVC is mounted to in the container. | `/pvc-mount`                            |

@@ -739,6 +739,271 @@ func TestServiceTemplate_Disable(t *testing.T) {
 	}
 }
 
+func TestPVC_DisabledByDefault(t *testing.T) {
+
+	templates := []string{"templates/pvc.yaml"}
+
+	opts := &helm.Options{}
+
+	output := helm.RenderTemplate(t, opts, helmChartPath, "test", templates)
+
+	require.Equal(t, "---", strings.Join(removeComments(output), ""))
+}
+
+func TestPVC_UsingExistingClaim(t *testing.T) {
+
+	templates := []string{"templates/pvc.yaml"}
+
+	opts := &helm.Options{
+		SetValues: map[string]string{
+			"persistence.existingClaim": "testing",
+		},
+	}
+
+	output := helm.RenderTemplate(t, opts, helmChartPath, "test", templates)
+
+	require.Equal(t, "---", strings.Join(removeComments(output), ""))
+}
+
+func TestPVC_EnabledWithDefaults(t *testing.T) {
+
+	templates := []string{"templates/pvc.yaml"}
+
+	opts := &helm.Options{
+		SetValues: map[string]string{
+			"persistence.enabled": "true",
+		},
+	}
+
+	output := helm.RenderTemplate(t, opts, helmChartPath, "test", templates)
+
+	var pvc coreV1.PersistentVolumeClaim
+	helm.UnmarshalK8SYaml(t, output, &pvc)
+
+	require.Equal(t, coreV1.PersistentVolumeAccessMode("ReadWriteOnce"), pvc.Spec.AccessModes[0])
+	storage := pvc.Spec.Resources.Requests[coreV1.ResourceStorage]
+	require.Equal(t, "8Gi", (&storage).String())
+	require.Equal(t, "default", pvc.ObjectMeta.Annotations["volume.alpha.kubernetes.io/storage-class"])
+}
+
+func TestPVC_OverrideAccessMode(t *testing.T) {
+
+	templates := []string{"templates/pvc.yaml"}
+
+	opts := &helm.Options{
+		SetValues: map[string]string{
+			"persistence.enabled": "true",
+			"persistence.accessMode": "ReadOnlyMany",
+		},
+	}
+
+	output := helm.RenderTemplate(t, opts, helmChartPath, "test", templates)
+
+	var pvc coreV1.PersistentVolumeClaim
+	helm.UnmarshalK8SYaml(t, output, &pvc)
+
+	require.Equal(t, coreV1.PersistentVolumeAccessMode("ReadOnlyMany"), pvc.Spec.AccessModes[0])
+}
+
+func TestPVC_OverrideStorageClass(t *testing.T) {
+
+	templates := []string{"templates/pvc.yaml"}
+
+	opts := &helm.Options{
+		SetValues: map[string]string{
+			"persistence.enabled": "true",
+			"persistence.storageClass": "testing",
+		},
+	}
+
+	output := helm.RenderTemplate(t, opts, helmChartPath, "test", templates)
+
+	var pvc coreV1.PersistentVolumeClaim
+	helm.UnmarshalK8SYaml(t, output, &pvc)
+
+	require.Equal(t, "testing", pvc.ObjectMeta.Annotations["volume.beta.kubernetes.io/storage-class"])
+}
+
+func TestPVC_OverrideStorageSize(t *testing.T) {
+
+	templates := []string{"templates/pvc.yaml"}
+
+	opts := &helm.Options{
+		SetValues: map[string]string{
+			"persistence.enabled": "true",
+			"persistence.size": "1Gi",
+		},
+	}
+
+	output := helm.RenderTemplate(t, opts, helmChartPath, "test", templates)
+
+	var pvc coreV1.PersistentVolumeClaim
+	helm.UnmarshalK8SYaml(t, output, &pvc)
+
+	storage := pvc.Spec.Resources.Requests[coreV1.ResourceStorage]
+	require.Equal(t, "1Gi", (&storage).String())
+
+}
+
+func TestPVCVolume_DisabledByDefault(t *testing.T) {
+
+	templates := []string{"templates/deployment.yaml"}
+
+	opts := &helm.Options{}
+
+	output := helm.RenderTemplate(t, opts, helmChartPath, "test", templates)
+
+	var deployment appsV1.Deployment
+	helm.UnmarshalK8SYaml(t, output, &deployment)
+
+	require.Len(t, deployment.Spec.Template.Spec.Volumes, 0)
+	require.Len(t, deployment.Spec.Template.Spec.Containers[0].VolumeMounts, 0)
+}
+
+func TestPVCVolume_EnabledWithDefaults(t *testing.T) {
+
+	templates := []string{"templates/deployment.yaml"}
+
+	opts := &helm.Options{
+		SetValues: map[string]string{
+			"persistence.enabled": "true",
+		},
+	}
+
+	output := helm.RenderTemplate(t, opts, helmChartPath, "test", templates)
+
+	var deployment appsV1.Deployment
+	helm.UnmarshalK8SYaml(t, output, &deployment)
+
+	require.Len(t, deployment.Spec.Template.Spec.Volumes, 1)
+	require.Len(t, deployment.Spec.Template.Spec.Containers[0].VolumeMounts, 1)
+	require.Equal(t, "test-auto-deploy", deployment.Spec.Template.Spec.Volumes[0].PersistentVolumeClaim.ClaimName)
+	require.Equal(t, "/pvc-mount", deployment.Spec.Template.Spec.Containers[0].VolumeMounts[0].MountPath)
+}
+
+func TestPVCVolume_OverrideClaimName(t *testing.T) {
+
+	templates := []string{"templates/deployment.yaml"}
+
+	opts := &helm.Options{
+		SetValues: map[string]string{
+			"persistence.enabled": "true",
+			"persistence.existingClaim": "testing",
+		},
+	}
+
+	output := helm.RenderTemplate(t, opts, helmChartPath, "test", templates)
+
+	var deployment appsV1.Deployment
+	helm.UnmarshalK8SYaml(t, output, &deployment)
+
+	require.Equal(t, "testing", deployment.Spec.Template.Spec.Volumes[0].PersistentVolumeClaim.ClaimName)
+}
+
+func TestPVCVolume_OverrideMountPath(t *testing.T) {
+
+	templates := []string{"templates/deployment.yaml"}
+
+	opts := &helm.Options{
+		SetValues: map[string]string{
+			"persistence.enabled": "true",
+			"persistence.mountPath": "/testing",
+		},
+	}
+
+	output := helm.RenderTemplate(t, opts, helmChartPath, "test", templates)
+
+	var deployment appsV1.Deployment
+	helm.UnmarshalK8SYaml(t, output, &deployment)
+
+	require.Equal(t, "/testing", deployment.Spec.Template.Spec.Containers[0].VolumeMounts[0].MountPath)
+}
+
+func TestWorkerPVCVolume_DisabledByDefault(t *testing.T) {
+
+	templates := []string{"templates/worker-deployment.yaml"}
+
+	opts := &helm.Options{
+		SetValues: map[string]string{
+			"workers.worker1.command[0]": "echo",
+			"workers.worker1.command[1]": "worker1",
+		},
+	}
+
+	output := helm.RenderTemplate(t, opts, helmChartPath, "test", templates)
+
+	var deployment appsV1.DeploymentList
+	helm.UnmarshalK8SYaml(t, output, &deployment)
+
+	require.Len(t, deployment.Items[0].Spec.Template.Spec.Volumes, 0)
+	require.Len(t, deployment.Items[0].Spec.Template.Spec.Containers[0].VolumeMounts, 0)
+}
+
+func TestWorkerPVCVolume_EnabledWithDefaults(t *testing.T) {
+
+	templates := []string{"templates/worker-deployment.yaml"}
+
+	opts := &helm.Options{
+		SetValues: map[string]string{
+			"workers.worker1.command[0]": "echo",
+			"workers.worker1.command[1]": "worker1",
+			"persistence.enabled": "true",
+		},
+	}
+
+	output := helm.RenderTemplate(t, opts, helmChartPath, "test", templates)
+
+	var deployment appsV1.DeploymentList
+	helm.UnmarshalK8SYaml(t, output, &deployment)
+
+	require.Len(t, deployment.Items[0].Spec.Template.Spec.Volumes, 1)
+	require.Len(t, deployment.Items[0].Spec.Template.Spec.Containers[0].VolumeMounts, 1)
+	require.Equal(t, "test-auto-deploy", deployment.Items[0].Spec.Template.Spec.Volumes[0].PersistentVolumeClaim.ClaimName)
+	require.Equal(t, "/pvc-mount", deployment.Items[0].Spec.Template.Spec.Containers[0].VolumeMounts[0].MountPath)
+}
+
+func TestWorkerPVCVolume_OverrideClaimName(t *testing.T) {
+
+	templates := []string{"templates/worker-deployment.yaml"}
+
+	opts := &helm.Options{
+		SetValues: map[string]string{
+			"workers.worker1.command[0]": "echo",
+			"workers.worker1.command[1]": "worker1",
+			"persistence.enabled": "true",
+			"persistence.existingClaim": "testing",
+		},
+	}
+
+	output := helm.RenderTemplate(t, opts, helmChartPath, "test", templates)
+
+	var deployment appsV1.DeploymentList
+	helm.UnmarshalK8SYaml(t, output, &deployment)
+
+	require.Equal(t, "testing", deployment.Items[0].Spec.Template.Spec.Volumes[0].PersistentVolumeClaim.ClaimName)
+}
+
+func TestWorkerPVCVolume_OverrideMountPath(t *testing.T) {
+
+	templates := []string{"templates/worker-deployment.yaml"}
+
+	opts := &helm.Options{
+		SetValues: map[string]string{
+			"workers.worker1.command[0]": "echo",
+			"workers.worker1.command[1]": "worker1",
+			"persistence.enabled": "true",
+			"persistence.mountPath": "/testing",
+		},
+	}
+
+	output := helm.RenderTemplate(t, opts, helmChartPath, "test", templates)
+
+	var deployment appsV1.DeploymentList
+	helm.UnmarshalK8SYaml(t, output, &deployment)
+
+	require.Equal(t, "/testing", deployment.Items[0].Spec.Template.Spec.Containers[0].VolumeMounts[0].MountPath)
+}
+
 type workerDeploymentTestCase struct {
 	ExpectedName         string
 	ExpectedCmd          []string
@@ -769,4 +1034,15 @@ func mergeStringMap(dst, src map[string]string) {
 	for k, v := range src {
 		dst[k] = v
 	}
+}
+
+func removeComments(output string) []string {
+	vs := strings.Split(output, "\n")
+	vsf := make([]string, 0)
+	for _, v := range vs {
+		if !strings.HasPrefix(v, "#") {
+			vsf = append(vsf, v)
+		}
+	}
+	return vsf
 }
