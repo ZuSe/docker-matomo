@@ -43,6 +43,7 @@ image: alpine:latest
 variables:
   DEVELOPMENT_ENABLED: "False"
   REVIEW_DISABLED: "True"
+  POSTGRES_ENABLED: "True"
   DOCKER_DRIVER: overlay2
   ROLLOUT_RESOURCE_TYPE: deployment
   DOCKER_TLS_CERTDIR: ""  # https://gitlab.com/gitlab-org/gitlab-runner/issues/4501
