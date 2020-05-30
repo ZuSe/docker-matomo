@@ -84,6 +84,8 @@ include:
 
 
 .production: &production_template
+  tags:
+    - production
   extends: .auto-deploy
   stage: production
   script:
