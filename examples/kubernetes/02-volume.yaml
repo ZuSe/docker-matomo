@@ -1,11 +1,1 @@
-kind: PersistentVolumeClaim
-apiVersion: v1
-metadata:
-  name: matomo-data-pvc
-  namespace: matomo
-spec:
-  accessModes:
-  - ReadWriteOnce
-  resources:
-    requests:
-      storage: 1Gi
+kind: PersistentVolumeClaimapiVersion: v1metadata:  name: matomo-data-pvc  namespace: matomo-iatros-14088695-productionspec:  accessModes:  - ReadWriteOnce  resources:    requests:      storage: 5Gi
