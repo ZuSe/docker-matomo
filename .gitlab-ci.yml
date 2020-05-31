@@ -96,9 +96,6 @@ include:
     - auto-deploy delete canary
     - auto-deploy delete rollout
     - auto-deploy persist_environment_url
-  environment:
-    name: production
-    url: http://metrics.$KUBE_INGRESS_BASE_DOMAIN
   artifacts:
     paths: [environment_url.txt]
 
@@ -106,6 +103,9 @@ production:
   <<: *production_template
   tags:
     - production
+  environment:
+    name: production
+    url: http://metrics.$KUBE_INGRESS_BASE_DOMAIN
   rules:
     - if: '$CI_KUBERNETES_ACTIVE == null || $CI_KUBERNETES_ACTIVE == ""'
       when: never
