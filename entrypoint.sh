@@ -7,16 +7,14 @@ function runas_nginx() {
 MEMORY_LIMIT=${MEMORY_LIMIT:-256M}
 UPLOAD_MAX_SIZE=${UPLOAD_MAX_SIZE:-16M}
 OPCACHE_MEM_SIZE=${OPCACHE_MEM_SIZE:-128}
+LISTEN_IPV6=${LISTEN_IPV6:-true}
 REAL_IP_FROM=${REAL_IP_FROM:-0.0.0.0/32}
 REAL_IP_HEADER=${REAL_IP_HEADER:-X-Forwarded-For}
 LOG_IP_VAR=${LOG_IP_VAR:-remote_addr}
+SHORTCODE_DOMAIN=${SHORTCODE_DOMAIN:-invalid}
 
 LOG_LEVEL=${LOG_LEVEL:-WARN}
 SIDECAR_CRON=${SIDECAR_CRON:-0}
-
-SSMTP_PORT=${SSMTP_PORT:-25}
-SSMTP_HOSTNAME=${SSMTP_HOSTNAME:-$(hostname -f)}
-SSMTP_TLS=${SSMTP_TLS:-NO}
 
 # PHP
 echo "Setting PHP-FPM configuration..."
@@ -35,31 +33,12 @@ sed -e "s#@UPLOAD_MAX_SIZE@#$UPLOAD_MAX_SIZE#g" \
   -e "s#@REAL_IP_FROM@#$REAL_IP_FROM#g" \
   -e "s#@REAL_IP_HEADER@#$REAL_IP_HEADER#g" \
   -e "s#@LOG_IP_VAR@#$LOG_IP_VAR#g" \
+  -e "s#@SHORTCODE_DOMAIN@#$SHORTCODE_DOMAIN#g" \
   /tpls/etc/nginx/nginx.conf > /etc/nginx/nginx.conf
 
-# SSMTP
-echo "Setting SSMTP configuration..."
-if [ -z "$SSMTP_HOST" ] ; then
-  echo "WARNING: SSMTP_HOST must be defined if you want to send emails"
-else
-  cat > /etc/ssmtp/ssmtp.conf <<EOL
-mailhub=${SSMTP_HOST}:${SSMTP_PORT}
-hostname=${SSMTP_HOSTNAME}
-FromLineOverride=YES
-UseTLS=${SSMTP_TLS}
-UseSTARTTLS=${SSMTP_TLS}
-EOL
-  # Authentication to SMTP server is optional.
-  if [ -n "$SSMTP_USER" ] ; then
-    cat >> /etc/ssmtp/ssmtp.conf <<EOL
-AuthUser=${SSMTP_USER}
-AuthPass=${SSMTP_PASSWORD}
-EOL
-  fi
+if [ "$LISTEN_IPV6" != "true" ]; then
+  sed -e '/listen \[::\]:/d' -i /etc/nginx/nginx.conf
 fi
-unset SSMTP_HOST
-unset SSMTP_USER
-unset SSMTP_PASSWORD
 
 # Init Matomo
 echo "Initializing Matomo files / folders..."

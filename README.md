@@ -2,9 +2,9 @@
 
 <p align="center">
   <a href="https://hub.docker.com/r/crazymax/matomo/tags?page=1&ordering=last_updated"><img src="https://img.shields.io/github/v/tag/crazy-max/docker-matomo?label=version&style=flat-square" alt="Latest Version"></a>
-  <a href="https://github.com/crazy-max/docker-matomo/actions?workflow=build"><img src="https://github.com/crazy-max/docker-matomo/workflows/build/badge.svg" alt="Build Status"></a>
-  <a href="https://hub.docker.com/r/crazymax/matomo/"><img src="https://img.shields.io/docker/stars/crazymax/matomo.svg?style=flat-square" alt="Docker Stars"></a>
-  <a href="https://hub.docker.com/r/crazymax/matomo/"><img src="https://img.shields.io/docker/pulls/crazymax/matomo.svg?style=flat-square" alt="Docker Pulls"></a>
+  <a href="https://github.com/crazy-max/docker-matomo/actions?workflow=build"><img src="https://img.shields.io/github/workflow/status/crazy-max/docker-matomo/build?label=build&logo=github&style=flat-square" alt="Build Status"></a>
+  <a href="https://hub.docker.com/r/crazymax/matomo/"><img src="https://img.shields.io/docker/stars/crazymax/matomo.svg?style=flat-square&logo=docker" alt="Docker Stars"></a>
+  <a href="https://hub.docker.com/r/crazymax/matomo/"><img src="https://img.shields.io/docker/pulls/crazymax/matomo.svg?style=flat-square&logo=docker" alt="Docker Pulls"></a>
   <a href="https://www.codacy.com/app/crazy-max/docker-matomo"><img src="https://img.shields.io/codacy/grade/c6bb409d02314ecf9928750de89d9d8c.svg?style=flat-square" alt="Code Quality"></a>
   <br /><a href="https://github.com/sponsors/crazy-max"><img src="https://img.shields.io/badge/sponsor-crazy--max-181717.svg?logo=github&style=flat-square" alt="Become a sponsor"></a>
   <a href="https://www.paypal.me/crazyws"><img src="https://img.shields.io/badge/donate-paypal-00457c.svg?logo=paypal&style=flat-square" alt="Donate Paypal"></a>
@@ -32,6 +32,7 @@ ___
   * [Command line](#command-line)
 * [Upgrade](#upgrade)
 * [Notes](#notes)
+  * [Email server settings](#email-server-settings)
   * [Sticky sessions](#sticky-sessions)
   * [Cron](#cron)
   * [GeoIP2](#geoip2)
@@ -50,10 +51,10 @@ ___
 * Cron tasks to archive Matomo reports as a ["sidecar" container](#cron)
 * Ability to pass [additional options](https://matomo.org/docs/setup-auto-archiving/#help-for-corearchive-command) during cron archive
 * Plugins and config are kept across upgrades of this image
-* [SSMTP](https://linux.die.net/man/8/ssmtp) for SMTP relay to send emails
 * OPCache enabled to store precompiled script bytecode in shared memory
 * Redis enabled and ready to enhance server performance
 * [Traefik](https://github.com/containous/traefik-library-image) Docker image as reverse proxy and creation/renewal of Let's Encrypt certificates
+* [msmtpd SMTP relay](https://github.com/crazy-max/docker-msmtpd) image to send emails
 * [Redis](https://github.com/docker-library/redis) Docker image ready to use as [Redis cache](https://matomo.org/faq/how-to/faq_20511/) or [QueuedTracking plugin](https://matomo.org/faq/how-to/faq_19738) for better scalability
 * [MariaDB](https://github.com/docker-library/mariadb) Docker image as database instance
 * [geoip-updater](https://github.com/crazy-max/geoip-updater) Docker image to download MaxMind's GeoIP2 databases on a time-based schedule for geolocation
@@ -84,17 +85,13 @@ Image: crazymax/matomo:latest
 * `MEMORY_LIMIT`: PHP memory limit (default `256M`)
 * `UPLOAD_MAX_SIZE`: Upload max size (default `16M`)
 * `OPCACHE_MEM_SIZE`: PHP OpCache memory consumption (default `128`)
+* `LISTEN_IPV6`: Enable IPv6 for Nginx (default `true`)
 * `REAL_IP_FROM`: Trusted addresses that are known to send correct replacement addresses (default `0.0.0.0/32`)
 * `REAL_IP_HEADER`: Request header field whose value will be used to replace the client address (default `X-Forwarded-For`)
 * `LOG_IP_VAR`: Use another variable to retrieve the remote IP address for access [log_format](http://nginx.org/en/docs/http/ngx_http_log_module.html#log_format) on Nginx. (default `remote_addr`)
 * `LOG_LEVEL`: [Log level](https://matomo.org/faq/troubleshooting/faq_115/) of Matomo UI (default `WARN`)
+* `SHORTCODE_DOMAIN`: Domain that you use for [ShortcodeTracker plugin](https://plugins.matomo.org/shortcodetracker) (default `invalid`)
 * `SIDECAR_CRON`: Mark the container as a sidecar cron job (default `0`)
-* `SSMTP_HOST`: SMTP server host
-* `SSMTP_PORT`: SMTP server port (default `25`)
-* `SSMTP_HOSTNAME`: Full hostname (default `$(hostname -f)`)
-* `SSMTP_USER`: SMTP username
-* `SSMTP_PASSWORD`: SMTP password
-* `SSMTP_TLS`: SSL/TLS (default `NO`)
 
 The following environment variables are only used if you run the container as ["sidecar" mode](#cron):
 
@@ -153,6 +150,12 @@ docker-compose up -d
 ```
 
 ## Notes
+
+### Email server settings
+
+You can use our SMTP relay `msmtpd` service published on port `2500` and declared in our [`docker-compose.yml`](examples/compose/docker-compose.yml):
+
+![Email server settings](.res/email-server-settings.png)
 
 ### Sticky sessions
 
