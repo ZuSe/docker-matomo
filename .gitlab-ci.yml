@@ -69,10 +69,6 @@ workflow:
     - if: '$BUILDPACK_URL || $AUTO_DEVOPS_EXPLICITLY_ENABLED == "1"'
     - exists:
         - Dockerfile
-    - exists:
-        - requirements.txt
-        - setup.py
-        - Pipfile
 
 include:
   - template: Jobs/Build.gitlab-ci.yml  # https://gitlab.com/gitlab-org/gitlab-foss/blob/master/lib/gitlab/ci/templates/Jobs/Build.gitlab-ci.yml
