@@ -1,4 +1,4 @@
-FROM nginx:mainline-alpine
+FROM --platform=${TARGETPLATFORM:-linux/amd64} nginx:mainline-alpine
 
 ARG BUILD_DATE
 ARG VCS_REF
@@ -77,7 +77,7 @@ RUN mkdir -p /var/mmdb \
   && wget -q https://github.com/crazy-max/docker-matomo/raw/mmdb/GeoLite2-City.mmdb -qO /var/mmdb/GeoLite2-City.mmdb \
   && wget -q https://github.com/crazy-max/docker-matomo/raw/mmdb/GeoLite2-Country.mmdb -qO /var/mmdb/GeoLite2-Country.mmdb
 
-ENV MATOMO_VERSION="3.13.5" \
+ENV MATOMO_VERSION="3.14.0" \
   CRONTAB_PATH="/var/spool/cron/crontabs" \
   TZ="UTC"
 
@@ -104,7 +104,7 @@ COPY rootfs /
 RUN chmod a+x /entrypoint.sh /usr/local/bin/* \
   && chown nginx. /var/www/bootstrap.php
 
-EXPOSE 5000
+EXPOSE 8000
 WORKDIR /var/www
 VOLUME [ "/data" ]
 

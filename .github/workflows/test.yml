@@ -1,20 +1,16 @@
 name: test
 
 on:
-  pull_request:
-    branches: master
-    paths:
-      - '.github/workflows/test.yml'
-      - 'rootfs/**'
-      - 'Dockerfile'
-      - 'entrypoint.sh'
   push:
-    branches: master
-    paths:
-      - '.github/workflows/test.yml'
-      - 'rootfs/**'
-      - 'Dockerfile'
-      - 'entrypoint.sh'
+    branches:
+      - 'master'
+    paths-ignore:
+      - '**.md'
+  pull_request:
+    branches:
+      - 'master'
+    paths-ignore:
+      - '**.md'
 
 jobs:
   test:
@@ -30,10 +26,10 @@ jobs:
           echo ::set-output name=running_log_check::matomo_watch_plugins entered RUNNING state
       -
         name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v2.3.1
       -
         name: Set up Docker Buildx
-        uses: crazy-max/ghaction-docker-buildx@v1
+        uses: crazy-max/ghaction-docker-buildx@v3.2.0
       -
         name: Docker Buildx
         run: |
