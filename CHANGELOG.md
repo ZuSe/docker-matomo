@@ -1,5 +1,30 @@
 # Changelog
 
+## 4.0.3-RC1 (2020/11/30)
+
+* Matomo 4.0.3
+
+## 4.0.2-RC1 (2020/11/29)
+
+* Matomo 4.0.2
+
+## 4.0.1-RC1 (2020/11/27)
+
+* Matomo 4.0.1
+
+## 4.0.0-RC1 (2020/11/25)
+
+* Matomo 4.0.0
+* Add `console` command
+
+> You may need to [convert the database to utf8mb4 charset](https://matomo.org/faq/how-to-update/how-to-convert-the-database-to-utf8mb4-charset/):
+> 
+> `docker-compose exec matomo console core:convert-to-utf8mb4`
+
+## 3.14.1-RC1 (2020/10/16)
+
+* Add env var to clear environment in FPM workers
+
 ## 3.14.1-RC1 (2020/09/12)
 
 * Matomo 3.14.1
