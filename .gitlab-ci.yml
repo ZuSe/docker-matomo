@@ -84,7 +84,7 @@ include:
   stage: production
   environment:
     name: production
-    url: http://metrics.$KUBE_INGRESS_BASE_DOMAIN
+    url: https://metrics.$KUBE_INGRESS_BASE_DOMAIN
   script:
     - auto-deploy check_kube_domain
     - auto-deploy download_chart

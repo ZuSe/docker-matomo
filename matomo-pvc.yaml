@@ -5,8 +5,8 @@ metadata:
 spec:
   accessModes:
     - ReadWriteMany
-  storageClassName: csi-cinder-classic
+  storageClassName: cinder-classic
   resources:
     requests:
-      storage: 10Gi
+      storage: 8Gi
 
