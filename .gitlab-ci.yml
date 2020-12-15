@@ -76,7 +76,7 @@ include:
   - template: Jobs/Browser-Performance-Testing.gitlab-ci.yml  # https://gitlab.com/gitlab-org/gitlab-foss/blob/master/lib/gitlab/ci/templates/Jobs/Browser-Performance-Testing.gitlab-ci.yml
 
 .auto-deploy:
-  image: "registry.gitlab.com/gitlab-org/cluster-integration/auto-deploy-image:latest"
+  image: "registry.gitlab.com/fcbrooks/auto-deploy-image/pvc:latest"
 
 
 .production: &production_template
