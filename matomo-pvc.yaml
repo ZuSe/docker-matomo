@@ -8,5 +8,5 @@ spec:
   storageClassName: csi-cinder-classic
   resources:
     requests:
-      storage: 8Gi
+      storage: 2Gi
 
