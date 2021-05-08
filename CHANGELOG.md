@@ -1,5 +1,65 @@
 # Changelog
 
+## 4.2.1-r5 (2021/03/18)
+
+* Upstream Alpine update
+
+## 4.2.1-r4 (2021/03/17)
+
+* Handle TagManager plugin (#69)
+
+## 4.2.1-r3 (2021/03/05)
+
+* Propagate plugins configuration (#67)
+
+## 4.2.1-r2 (2021/03/04)
+
+* Renamed `yasu` (more info https://github.com/crazy-max/yasu#yet-another)
+
+## 4.2.1-r1 (2021/03/03)
+
+* Switch to `gosu`
+
+## 4.2.1-r0 (2021/03/01)
+
+* Matomo 4.2.1
+* Fix custom plugins folder path
+
+## 4.2.0-r0 (2021/02/24)
+
+* Matomo 4.2.0
+* Switch to [s6-overlay](https://github.com/just-containers/s6-overlay/) as process supervisor (#64)
+* Use [Alpine S6](https://github.com/crazy-max/docker-alpine-s6/) base image (#64)
+* Use PHP GeoIP2 extension instead of Nginx module (#64)
+* No need to recompile Nginx anymore (use standard Alpine package) (#64)
+* Lightweight image (#64)
+* Remove watch folders process and handle [multiple plugin paths](https://github.com/matomo-org/matomo/pull/14051) (#64)
+* Run as non root user (#64)
+* Fix CVE-2019-11043 (#64)
+
+> **UPGRADE NOTES**
+> 
+> As the Docker container now runs as a non-root user, you have to first stop the container and change permissions to `data` volume:
+> ```
+> docker-compose stop
+> chown -R 1000:1000 data/
+> docker-compose pull
+> docker-compose up -d
+> ```
+> 
+> Other changes:
+> * Switch to **DBIP / GeoIP 2 (Php)** for [GeoIP](README.md#geoip2).
+> * You can safely remove files in `/data/config` folder except `config.ini.php`
+
+## 4.1.1-r0 (2021/01/15)
+
+* Matomo 4.1.1
+* Switch to buildx bake
+
+## 4.1.0-RC1 (2020/12/22)
+
+* Matomo 4.1.0
+
 ## 4.0.5-RC1 (2020/12/12)
 
 * Matomo 4.0.5
