@@ -37,7 +37,7 @@
 #
 
 variables:
-  AUTO_BUILD_IMAGE_VERSION: "v2.26.0"
+  AUTO_BUILD_IMAGE_VERSION: "latest"
   DEVELOPMENT_ENABLED: "false"
   REVIEW_DISABLED: "true"
   POSTGRES_ENABLED: "false"
