@@ -1,0 +1,41 @@
+hpa:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 4
+  targetCPUUtilizationPercentage: 80
+service:
+  externalPort: 5000
+  internalPort: 5000
+livenessProbe:
+  path: "/"
+  initialDelaySeconds: 60
+  timeoutSeconds: 15
+  scheme: "HTTP"
+  probeType: "httpGet"
+readinessProbe:
+  path: "/"
+  initialDelaySeconds: 30
+  timeoutSeconds: 5
+  scheme: "HTTP"
+  probeType: "httpGet"
+resources:
+  limits:
+    cpu: 4
+    memory: 2048Mi
+  requests:
+    cpu: 250m
+    memory: 512Mi
+ingress:
+  enabled: true
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "8m"
+persistence:
+  enabled: true
+  volumes:
+    - name: matomo-data
+      mount:
+        path: "/data"
+      claim:
+        accessMode: ReadWriteMany
+        size: 8Gi
+

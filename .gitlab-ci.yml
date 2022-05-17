@@ -36,9 +36,8 @@
 # e.g. BUILDPACK_URL=https://github.com/heroku/heroku-buildpack-ruby.git#v142
 #
 
-image: alpine:latest
-
 variables:
+  AUTO_BUILD_IMAGE_VERSION: "v2.26.0"
   DEVELOPMENT_ENABLED: "false"
   REVIEW_DISABLED: "true"
   POSTGRES_ENABLED: "false"
@@ -72,10 +71,6 @@ include:
   - template: Jobs/Build.gitlab-ci.yml  # https://gitlab.com/gitlab-org/gitlab-foss/blob/master/lib/gitlab/ci/templates/Jobs/Build.gitlab-ci.yml
   - template: Jobs/Deploy.gitlab-ci.yml  # https://gitlab.com/gitlab-org/gitlab-foss/blob/master/lib/gitlab/ci/templates/Jobs/Deploy.gitlab-ci.yml
   - template: Jobs/Browser-Performance-Testing.gitlab-ci.yml  # https://gitlab.com/gitlab-org/gitlab-foss/blob/master/lib/gitlab/ci/templates/Jobs/Browser-Performance-Testing.gitlab-ci.yml
-
-.auto-deploy:
-  image: "registry.gitlab.com/fcbrooks/auto-deploy-image/pvc:latest"
-
 
 .production: &production_template
   extends: .auto-deploy
