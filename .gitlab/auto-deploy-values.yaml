@@ -23,7 +23,7 @@ resources:
     cpu: 8
     memory: 16Gi
   requests:
-    cpu: 800m
+    cpu: 2
     memory: 1Gi
 ingress:
   enabled: true
