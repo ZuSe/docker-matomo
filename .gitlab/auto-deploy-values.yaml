@@ -20,11 +20,11 @@ readinessProbe:
   probeType: "httpGet"
 resources:
   limits:
-    cpu: 4
-    memory: 2048Mi
+    cpu: 8
+    memory: 16Gi
   requests:
     cpu: 800m
-    memory: 512Mi
+    memory: 1Gi
 ingress:
   enabled: true
   annotations:
