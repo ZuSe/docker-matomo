@@ -2,7 +2,7 @@ hpa:
   enabled: true
   minReplicas: 1
   maxReplicas: 4
-  targetCPUUtilizationPercentage: 80
+  targetCPUUtilizationPercentage: 90
 service:
   externalPort: 5000
   internalPort: 5000
@@ -23,7 +23,7 @@ resources:
     cpu: 4
     memory: 2048Mi
   requests:
-    cpu: 250m
+    cpu: 800m
     memory: 512Mi
 ingress:
   enabled: true
