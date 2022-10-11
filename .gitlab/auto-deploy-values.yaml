@@ -24,7 +24,7 @@ resources:
     memory: 16Gi
   requests:
     cpu: 2
-    memory: 1Gi
+    memory: 4Gi
 ingress:
   enabled: true
   annotations:
@@ -36,6 +36,6 @@ persistence:
       mount:
         path: "/data"
       claim:
-        accessMode: ReadWriteMany
+        accessMode: ReadWriteOnce
         size: 8Gi
 
