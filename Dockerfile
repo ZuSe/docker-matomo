@@ -52,6 +52,7 @@ RUN apk --update --no-cache add \
     php81-json \
     php81-ldap \
     php81-mbstring \
+    php91-mysqli \
     php81-opcache \
     php81-openssl \
     php81-pdo \
