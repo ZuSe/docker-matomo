@@ -4,9 +4,9 @@ metadata:
   name: matomo-data-pvc
 spec:
   accessModes:
-    - ReadWriteMany
+    - ReadWriteOnce
   storageClassName: csi-cinder-classic
   resources:
     requests:
-      storage: 2Gi
+      storage: 8Gi
 

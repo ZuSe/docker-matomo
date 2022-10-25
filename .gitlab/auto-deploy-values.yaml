@@ -36,6 +36,6 @@ persistence:
       mount:
         path: "/data"
       claim:
-        accessMode: ReadWriteMany
+        accessMode: ReadWriteOnce
         size: 8Gi
 
