@@ -24,11 +24,11 @@ resources:
     memory: 16Gi
   requests:
     cpu: 2
-    memory: 4Gi
+    memory: 8Gi
 ingress:
   enabled: true
   annotations:
-    nginx.ingress.kubernetes.io/proxy-body-size: "8m"
+    nginx.ingress.kubernetes.io/proxy-body-size: "16m"
 persistence:
   enabled: true
   volumes:
@@ -36,6 +36,6 @@ persistence:
       mount:
         path: "/data"
       claim:
-        accessMode: ReadWriteOnce
+        accessMode: ReadWriteMany
         size: 8Gi
 
