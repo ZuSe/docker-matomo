@@ -103,8 +103,6 @@ production:
   tags:
     - production
   rules:
-    - if: '$CI_KUBERNETES_ACTIVE == null || $CI_KUBERNETES_ACTIVE == ""'
-      when: never
     - if: '$STAGING_ENABLED'
       when: never
     - if: '$CANARY_ENABLED'
