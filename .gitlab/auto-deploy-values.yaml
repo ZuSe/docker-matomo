@@ -20,11 +20,11 @@ readinessProbe:
   probeType: "httpGet"
 resources:
   limits:
-    cpu: 8
-    memory: 16Gi
+    cpu: 500m
+    memory: 1Gi
   requests:
-    cpu: 2
-    memory: 8Gi
+    cpu: 500m
+    memory: 1Gi
 ingress:
   enabled: true
   annotations:
@@ -36,6 +36,6 @@ persistence:
       mount:
         path: "/data"
       claim:
-        accessMode: ReadWriteMany
+        accessMode: ReadWriteOnce
         size: 8Gi
 
