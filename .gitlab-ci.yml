@@ -85,6 +85,8 @@ include:
   environment:
     name: production
     url: https://metrics.$KUBE_INGRESS_BASE_DOMAIN
+  variables:
+    KUBE_NAMESPACE: ${CI_PROJECT_NAME}
   script:
     - auto-deploy check_kube_domain
     - auto-deploy download_chart
