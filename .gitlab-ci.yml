@@ -1,3 +1,4 @@
+image: docker:20.10.16
 # Auto DevOps
 # This CI/CD configuration provides a standard pipeline for
 # * building a Docker image (using a buildpack if necessary),
@@ -42,9 +43,12 @@ variables:
   REVIEW_DISABLED: "true"
   POSTGRES_ENABLED: "false"
   DOCKER_DRIVER: overlay2
+  DOCKER_HOST: tcp://docker:2375
+  DOCKER_TLS_CERTDIR: ""
   ROLLOUT_RESOURCE_TYPE: deployment
-  DOCKER_TLS_CERTDIR: ""  # https://gitlab.com/gitlab-org/gitlab-runner/issues/4501
-
+services:
+  - docker:20.10.16-dind
+  -
 stages:
   - build
   - unit_test
