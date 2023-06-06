@@ -48,7 +48,7 @@ variables:
   ROLLOUT_RESOURCE_TYPE: deployment
 services:
   - docker:20.10.16-dind
-  -
+
 stages:
   - build
   - unit_test
