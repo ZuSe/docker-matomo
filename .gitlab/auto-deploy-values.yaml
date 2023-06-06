@@ -20,10 +20,10 @@ readinessProbe:
   probeType: "httpGet"
 resources:
   limits:
-    cpu: 500m
+    cpu: 1
     memory: 2Gi
   requests:
-    cpu: 500m
+    cpu: 1
     memory: 2Gi
 ingress:
   enabled: true
