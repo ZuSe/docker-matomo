@@ -79,6 +79,8 @@ include:
 
 build:
   stage: build
+  tags:
+    - heavy
   image:
     # For latest releases see https://github.com/GoogleContainerTools/kaniko/releases
     # Only debug/*-debug versions of the Kaniko image are known to work within Gitlab CI
