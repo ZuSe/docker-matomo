@@ -43,6 +43,10 @@ variables:
   POSTGRES_ENABLED: "false"
   ROLLOUT_RESOURCE_TYPE: deployment
 
+job:
+  tags:
+    - heavy
+
 stages:
   - build
   - unit_test
@@ -76,24 +80,6 @@ include:
     - echo $KUBECONFIG
     - kubectl config get-contexts
     - kubectl config use-context $KUBE_CONTEXT
-
-build:
-  stage: build
-  tags:
-    - heavy
-  image:
-    # For latest releases see https://github.com/GoogleContainerTools/kaniko/releases
-    # Only debug/*-debug versions of the Kaniko image are known to work within Gitlab CI
-    name: gcr.io/kaniko-project/executor:debug
-    entrypoint: [""]
-  script:
-    -  echo "{\"auths\":{\"$CI_REGISTRY\":{\"auth\":\"$(echo -n $CI_REGISTRY_USER:$CI_JOB_TOKEN  | base64)\"}}}" > /kaniko/.docker/config.json
-    - /kaniko/executor
-      --context "${CI_PROJECT_DIR}"
-      --dockerfile "${CI_PROJECT_DIR}/Dockerfile"
-      --destination "${CI_REGISTRY_IMAGE}:${CI_COMMIT_TAG}"
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "master"'
 
 .production: &production_template
   extends: .auto-deploy
