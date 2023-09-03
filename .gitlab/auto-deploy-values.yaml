@@ -7,28 +7,64 @@ service:
   externalPort: 5000
   internalPort: 5000
 livenessProbe:
+  enabled: true
   path: "/"
-  initialDelaySeconds: 60
+  initialDelaySeconds: 15
   timeoutSeconds: 15
   scheme: "HTTP"
   probeType: "httpGet"
+  httpHeaders: []
 readinessProbe:
+  enabled: true
   path: "/"
-  initialDelaySeconds: 30
-  timeoutSeconds: 5
+  initialDelaySeconds: 15
+  timeoutSeconds: 10
   scheme: "HTTP"
   probeType: "httpGet"
+  httpHeaders: []
+startupProbe:
+  enabled: true
+  path: "/"
+  initialDelaySeconds: 15
+  timeoutSeconds: 10
+  failureThreshold: 30
+  periodSeconds: 10
+  scheme: "HTTP"
+  probeType: "httpGet"
+  httpHeaders: []
 resources:
   limits:
-    cpu: 1
-    memory: 2Gi
+    cpu: 800m
+    memory: 4Gi
   requests:
-    cpu: 1
-    memory: 2Gi
+    cpu: 200m
+    memory: 3Gi
+tolerations:
+  - key: cloud.google.com/gke-spot
+    operator: Equal
+    value: "true"
+    effect: NoSchedule
+topologySpreadConstraints:
+  - maxSkew: 1
+    topologyKey: zone
+    whenUnsatisfiable: ScheduleAnyway
+    labelSelector:
+      matchLabels:
+        app: production
+    matchLabelKeys:
+      - pod-template-hash
+  - maxSkew: 1
+    topologyKey: node
+    whenUnsatisfiable: ScheduleAnyway
+    labelSelector:
+      matchLabels:
+        app: production
+    matchLabelKeys:
+      - pod-template-hash
 ingress:
   enabled: true
   annotations:
-    nginx.ingress.kubernetes.io/proxy-body-size: "16m"
+    nginx.ingress.kubernetes.io/proxy-body-size: "128m"
 persistence:
   enabled: true
   volumes:
