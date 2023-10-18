@@ -35,10 +35,10 @@ startupProbe:
 resources:
   limits:
     cpu: 800m
-    memory: 4Gi
+    memory: 3G
   requests:
     cpu: 200m
-    memory: 3Gi
+    memory: 2G
 tolerations:
   - key: cloud.google.com/gke-spot
     operator: Equal
