@@ -34,11 +34,11 @@ startupProbe:
   httpHeaders: []
 resources:
   limits:
-    cpu: 800m
-    memory: 3G
+    cpu: 3
+    memory: 8G
   requests:
-    cpu: 200m
-    memory: 2G
+    cpu: 0.5
+    memory: 4G
 tolerations:
   - key: cloud.google.com/gke-spot
     operator: Equal
