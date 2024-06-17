@@ -1,6 +1,6 @@
 variables:
   AUTO_BUILD_IMAGE_VERSION: "latest"
-  DOCKERFILE_PATHL : "./"
+  DOCKERFILE_PATH : "./"
   DEVELOPMENT_ENABLED: "false"
   REVIEW_DISABLED: "true"
   POSTGRES_ENABLED: "false"
