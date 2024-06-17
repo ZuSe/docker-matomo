@@ -26,7 +26,7 @@ jobs:
       matrix:
         dockerfile:
           - 4.Dockerfile
-          - 5.Dockerfile
+          - Dockerfile
     steps:
       -
         name: Checkout

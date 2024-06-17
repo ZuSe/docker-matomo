@@ -17,7 +17,7 @@ on:
       - '**.md'
 
 env:
-  LATEST_DOCKERFILE: 5.Dockerfile
+  LATEST_DOCKERFILE: Dockerfile
   DOCKERHUB_SLUG: crazymax/matomo
   GHCR_SLUG: ghcr.io/crazy-max/matomo
 
