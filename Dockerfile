@@ -1,29 +1,22 @@
 # syntax=docker/dockerfile:1
 
-ARG MATOMO_VERSION=5.1.0
-ARG ALPINE_VERSION=3.19
+ARG MATOMO_VERSION=5.6.2
+ARG ALPINE_VERSION=3.22
 
-FROM crazymax/yasu:latest AS yasu
-FROM --platform=${BUILDPLATFORM:-linux/amd64} crazymax/alpine-s6:${ALPINE_VERSION}-2.2.0.3 AS download
+FROM --platform=${BUILDPLATFORM} crazymax/alpine-s6:${ALPINE_VERSION}-2.2.0.3 AS download
 RUN apk --update --no-cache add curl tar unzip xz
-
 ARG MATOMO_VERSION
 WORKDIR /dist/matomo
 RUN curl -sSL "https://builds.matomo.org/matomo-${MATOMO_VERSION}.tar.gz" | tar xz matomo --strip 1
 RUN curl -sSL "https://matomo.org/wp-content/uploads/unifont.ttf.zip" -o "unifont.ttf.zip"
 RUN unzip "unifont.ttf.zip" -d "./plugins/ImageGraph/fonts/"
 RUN rm -f "unifont.ttf.zip"
-
 WORKDIR /dist/mmdb
 RUN curl -SsOL "https://github.com/crazy-max/geoip-updater/raw/mmdb/GeoLite2-ASN.mmdb" \
   && curl -SsOL "https://github.com/crazy-max/geoip-updater/raw/mmdb/GeoLite2-City.mmdb" \
   && curl -SsOL "https://github.com/crazy-max/geoip-updater/raw/mmdb/GeoLite2-Country.mmdb"
 
 FROM crazymax/alpine-s6:${ALPINE_VERSION}-2.2.0.3
-
-COPY --from=yasu / /
-COPY --from=download --chown=nobody:nogroup /dist/matomo /var/www/matomo
-COPY --from=download --chown=nobody:nogroup /dist/mmdb /var/mmdb
 
 ENV S6_BEHAVIOUR_IF_STAGE2_FAILS="2" \
   TZ="UTC" \
@@ -32,6 +25,10 @@ ENV S6_BEHAVIOUR_IF_STAGE2_FAILS="2" \
   MATOMO_PLUGIN_DIRS="/var/www/matomo/data-plugins/;data-plugins" \
   MATOMO_PLUGIN_COPY_DIR="/var/www/matomo/data-plugins/"
 
+COPY --from=crazymax/yasu:latest / /
+COPY --from=download --chown=nobody:nogroup /dist/matomo /var/www/matomo
+COPY --from=download --chown=nobody:nogroup /dist/mmdb /var/mmdb
+
 RUN apk --update --no-cache add \
     bash \
     ca-certificates \
@@ -39,29 +36,29 @@ RUN apk --update --no-cache add \
     libmaxminddb \
     nginx \
     openssl \
-    php82 \
-    php82-bcmath \
-    php82-cli \
-    php82-ctype \
-    php82-curl \
-    php82-dom \
-    php82-iconv \
-    php82-fpm \
-    php82-gd \
-    php82-gmp \
-    php82-json \
-    php82-ldap \
-    php82-mbstring \
-    php82-opcache \
-    php82-openssl \
-    php82-pdo \
-    php82-pdo_mysql \
-    php82-pecl-maxminddb \
-    php82-redis \
-    php82-session \
-    php82-simplexml \
-    php82-xml \
-    php82-zlib \
+    php83 \
+    php83-bcmath \
+    php83-cli \
+    php83-ctype \
+    php83-curl \
+    php83-dom \
+    php83-iconv \
+    php83-fpm \
+    php83-gd \
+    php83-gmp \
+    php83-json \
+    php83-ldap \
+    php83-mbstring \
+    php83-opcache \
+    php83-openssl \
+    php83-pdo \
+    php83-pdo_mysql \
+    php83-pecl-maxminddb \
+    php83-redis \
+    php83-session \
+    php83-simplexml \
+    php83-xml \
+    php83-zlib \
     rsync \
     shadow \
     tzdata \
