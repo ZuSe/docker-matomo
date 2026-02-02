@@ -11,6 +11,10 @@ RUN curl -sSL "https://builds.matomo.org/matomo-${MATOMO_VERSION}.tar.gz" | tar 
 RUN curl -sSL "https://matomo.org/wp-content/uploads/unifont.ttf.zip" -o "unifont.ttf.zip"
 RUN unzip "unifont.ttf.zip" -d "./plugins/ImageGraph/fonts/"
 RUN rm -f "unifont.ttf.zip"
+RUN curl -sSL "https://plugins.matomo.org/api/2.0/plugins/QueuedTracking/download/5.1.3" \
+  -o /tmp/QueuedTracking.zip \
+  && unzip /tmp/QueuedTracking.zip -d plugins/ \
+  && rm /tmp/QueuedTracking.zip
 WORKDIR /dist/mmdb
 RUN curl -SsOL "https://github.com/crazy-max/geoip-updater/raw/mmdb/GeoLite2-ASN.mmdb" \
   && curl -SsOL "https://github.com/crazy-max/geoip-updater/raw/mmdb/GeoLite2-City.mmdb" \
