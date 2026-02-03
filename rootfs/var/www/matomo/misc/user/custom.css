@@ -1,0 +1,25 @@
+/* Custom branding - White topbar */
+#header {
+    background-color: #ffffff !important;
+}
+
+#header .logo {
+    filter: none;
+}
+
+/* Ensure text remains readable on white background */
+#header .nav-wrapper a,
+#header .top_bar_container a,
+#header .nav > li > a {
+    color: #333333 !important;
+}
+
+#header .nav > li > a:hover {
+    color: #6A00FF !important;
+}
+
+/* Purple accent for active items (avimedical brand color) */
+#header .nav > li.active > a,
+#header .nav > li.sfHover > a {
+    color: #6A00FF !important;
+}

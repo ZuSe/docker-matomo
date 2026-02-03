@@ -105,15 +105,22 @@ ln -sf /data/tmp/js /var/www/matomo/js
 
 # Check user folder
 echo "Checking Matomo user-misc folder..."
-if [ ! -d /data/misc/user ]; then
-  if [ ! -L /var/www/matomo/misc/user ] && [ -d /var/www/matomo/misc/user ]; then
-    runas_user cp -Rf /var/www/matomo/misc/user /data/misc/
-    rm -rf /var/www/matomo/misc/user
-  fi
-elif [ ! -L /var/www/matomo/misc/user ] && [ -d /var/www/matomo/misc/user ]; then
+runas_user mkdir -p /data/misc/user
+
+# Copy default branding files if not present
+if [ -f /var/www/matomo/misc/user/logo.svg ] && [ ! -f /data/misc/user/logo.svg ]; then
+  echo "Copying default logo..."
+  runas_user cp /var/www/matomo/misc/user/logo.svg /data/misc/user/
+fi
+if [ -f /var/www/matomo/misc/user/custom.css ] && [ ! -f /data/misc/user/custom.css ]; then
+  echo "Copying default custom.css..."
+  runas_user cp /var/www/matomo/misc/user/custom.css /data/misc/user/
+fi
+
+# Remove non-symlink user folder and create symlink
+if [ ! -L /var/www/matomo/misc/user ] && [ -d /var/www/matomo/misc/user ]; then
   rm -rf /var/www/matomo/misc/user
 fi
-runas_user mkdir -p /data/misc/user
 ln -sf /data/misc/user /var/www/matomo/misc/user
 
 # Check tmp folder
