@@ -14,7 +14,6 @@ permissions:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
 
 jobs:
   build-and-push:
@@ -22,6 +21,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Set image name lowercase
+        id: image
+        run: echo "name=${GITHUB_REPOSITORY,,}" >> $GITHUB_OUTPUT
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -40,22 +43,13 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          images: ${{ env.REGISTRY }}/${{ steps.image.outputs.name }}
           tags: |
             type=edge,branch=master
             type=semver,pattern={{major}}.{{minor}}
             type=sha,prefix=
 
       - name: Build and push
-        uses: docker/bake-action@v6
-        with:
-          source: .
-          targets: image-all
-          push: true
-        env:
-          DEFAULT_TAG: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:edge
-
-      - name: Build and push with tags
         uses: docker/build-push-action@v6
         with:
           context: .
