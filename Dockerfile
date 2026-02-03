@@ -58,7 +58,7 @@ RUN apk --update --no-cache add \
     php85-pdo \
     php85-pdo_mysql \
     php85-pecl-maxminddb \
-    php85-redis \
+    php85-pecl-redis \
     php85-session \
     php85-simplexml \
     php85-xml \
