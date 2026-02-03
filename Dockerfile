@@ -53,7 +53,6 @@ RUN apk --update --no-cache add \
     php85-json \
     php85-ldap \
     php85-mbstring \
-    php85-opcache \
     php85-openssl \
     php85-pdo \
     php85-pdo_mysql \
