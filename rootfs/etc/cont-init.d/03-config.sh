@@ -112,6 +112,10 @@ if [ -f /var/www/matomo/misc/user/logo.svg ] && [ ! -f /data/misc/user/logo.svg 
   echo "Copying default logo..."
   runas_user cp /var/www/matomo/misc/user/logo.svg /data/misc/user/
 fi
+if [ -f /var/www/matomo/misc/user/logo-header.svg ] && [ ! -f /data/misc/user/logo-header.svg ]; then
+  echo "Copying default header logo..."
+  runas_user cp /var/www/matomo/misc/user/logo-header.svg /data/misc/user/
+fi
 if [ -f /var/www/matomo/misc/user/custom.css ] && [ ! -f /data/misc/user/custom.css ]; then
   echo "Copying default custom.css..."
   runas_user cp /var/www/matomo/misc/user/custom.css /data/misc/user/
