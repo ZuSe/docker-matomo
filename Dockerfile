@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 ARG MATOMO_VERSION=5.7.1
-ARG ALPINE_VERSION=3.22
+ARG ALPINE_VERSION=3.23
 
 FROM --platform=${BUILDPLATFORM} crazymax/alpine-s6:${ALPINE_VERSION}-2.2.0.3 AS download
 RUN apk --update --no-cache add curl tar unzip xz
@@ -11,7 +11,7 @@ RUN curl -sSL "https://builds.matomo.org/matomo-${MATOMO_VERSION}.tar.gz" | tar 
 RUN curl -sSL "https://matomo.org/wp-content/uploads/unifont.ttf.zip" -o "unifont.ttf.zip"
 RUN unzip "unifont.ttf.zip" -d "./plugins/ImageGraph/fonts/"
 RUN rm -f "unifont.ttf.zip"
-RUN curl -sSL "https://plugins.matomo.org/api/2.0/plugins/QueuedTracking/download/5.1.3" \
+RUN curl -sSL "https://plugins.matomo.org/api/2.0/plugins/QueuedTracking/download/5.2.0" \
   -o /tmp/QueuedTracking.zip \
   && unzip /tmp/QueuedTracking.zip -d plugins/ \
   && rm /tmp/QueuedTracking.zip
@@ -40,29 +40,29 @@ RUN apk --update --no-cache add \
     libmaxminddb \
     nginx \
     openssl \
-    php83 \
-    php83-bcmath \
-    php83-cli \
-    php83-ctype \
-    php83-curl \
-    php83-dom \
-    php83-iconv \
-    php83-fpm \
-    php83-gd \
-    php83-gmp \
-    php83-json \
-    php83-ldap \
-    php83-mbstring \
-    php83-opcache \
-    php83-openssl \
-    php83-pdo \
-    php83-pdo_mysql \
-    php83-pecl-maxminddb \
-    php83-redis \
-    php83-session \
-    php83-simplexml \
-    php83-xml \
-    php83-zlib \
+    php85 \
+    php85-bcmath \
+    php85-cli \
+    php85-ctype \
+    php85-curl \
+    php85-dom \
+    php85-iconv \
+    php85-fpm \
+    php85-gd \
+    php85-gmp \
+    php85-json \
+    php85-ldap \
+    php85-mbstring \
+    php85-opcache \
+    php85-openssl \
+    php85-pdo \
+    php85-pdo_mysql \
+    php85-pecl-maxminddb \
+    php85-redis \
+    php85-session \
+    php85-simplexml \
+    php85-xml \
+    php85-zlib \
     rsync \
     shadow \
     tzdata \
