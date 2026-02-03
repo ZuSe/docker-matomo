@@ -46,7 +46,7 @@ jobs:
           images: ${{ env.REGISTRY }}/${{ steps.image.outputs.name }}
           tags: |
             type=edge,branch=master
-            type=semver,pattern={{major}}.{{minor}}
+            type=ref,event=tag
             type=sha,prefix=
 
       - name: Build and push
