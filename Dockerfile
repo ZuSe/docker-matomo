@@ -11,10 +11,35 @@ RUN curl -sSL "https://builds.matomo.org/matomo-${MATOMO_VERSION}.tar.gz" | tar 
 RUN curl -sSL "https://matomo.org/wp-content/uploads/unifont.ttf.zip" -o "unifont.ttf.zip"
 RUN unzip "unifont.ttf.zip" -d "./plugins/ImageGraph/fonts/"
 RUN rm -f "unifont.ttf.zip"
+# Download free marketplace plugins
 RUN curl -sSL "https://plugins.matomo.org/api/2.0/plugins/QueuedTracking/download/5.2.0" \
   -o /tmp/QueuedTracking.zip \
   && unzip /tmp/QueuedTracking.zip -d plugins/ \
   && rm /tmp/QueuedTracking.zip
+
+RUN curl -sSL "https://plugins.matomo.org/api/2.0/plugins/CustomAlerts/download/5.2.3" \
+  -o /tmp/CustomAlerts.zip \
+  && unzip /tmp/CustomAlerts.zip -d plugins/ \
+  && rm /tmp/CustomAlerts.zip
+
+RUN curl -sSL "https://plugins.matomo.org/api/2.0/plugins/TrackingSpamPrevention/download/5.0.8" \
+  -o /tmp/TrackingSpamPrevention.zip \
+  && unzip /tmp/TrackingSpamPrevention.zip -d plugins/ \
+  && rm /tmp/TrackingSpamPrevention.zip
+
+RUN curl -sSL "https://plugins.matomo.org/api/2.0/plugins/InvalidateReports/download/5.0.2" \
+  -o /tmp/InvalidateReports.zip \
+  && unzip /tmp/InvalidateReports.zip -d plugins/ \
+  && rm /tmp/InvalidateReports.zip
+
+RUN curl -sSL "https://plugins.matomo.org/api/2.0/plugins/Migration/download/5.0.6" \
+  -o /tmp/Migration.zip \
+  && unzip /tmp/Migration.zip -d plugins/ \
+  && rm /tmp/Migration.zip
+
+# Copy premium plugins from build context (requires valid license in Matomo instance)
+COPY plugins/Funnels plugins/Funnels
+COPY plugins/UsersFlow plugins/UsersFlow
 WORKDIR /dist/mmdb
 RUN curl -SsOL "https://github.com/crazy-max/geoip-updater/raw/mmdb/GeoLite2-ASN.mmdb" \
   && curl -SsOL "https://github.com/crazy-max/geoip-updater/raw/mmdb/GeoLite2-City.mmdb" \
