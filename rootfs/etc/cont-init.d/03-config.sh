@@ -136,3 +136,51 @@ if [ ! -L /var/www/matomo/tmp ] && [ -d /var/www/matomo/tmp ]; then
   rm -rf /var/www/matomo/tmp
 fi
 ln -sf /data/tmp /var/www/matomo/tmp
+
+# Configure Redis if REDIS_HOST is set
+REDIS_HOST=${REDIS_HOST:-}
+REDIS_PORT=${REDIS_PORT:-6379}
+REDIS_DATABASE=${REDIS_DATABASE:-0}
+REDIS_TIMEOUT=${REDIS_TIMEOUT:-0.0}
+REDIS_PASSWORD=${REDIS_PASSWORD:-}
+
+if [ -n "$REDIS_HOST" ] && [ -f "/data/config/config.ini.php" ]; then
+  echo "Configuring Redis at ${REDIS_HOST}:${REDIS_PORT}..."
+
+  # Remove existing Redis/Cache sections if present
+  sed -i '/^\[RedisCache\]/,/^\[/{ /^\[RedisCache\]/d; /^\[/!d; }' /data/config/config.ini.php
+  sed -i '/^\[ChainedCache\]/,/^\[/{ /^\[ChainedCache\]/d; /^\[/!d; }' /data/config/config.ini.php
+
+  # Check if QueuedTracking section exists and update it
+  if grep -q '^\[QueuedTracking\]' /data/config/config.ini.php; then
+    # Remove old QueuedTracking redis settings
+    sed -i '/^\[QueuedTracking\]/,/^\[/{
+      /^redisHost/d
+      /^redisPort/d
+      /^redisDatabase/d
+      /^redisTimeout/d
+      /^redisPassword/d
+      /^queueEnabled/d
+      /^processDuringTrackingRequest/d
+    }' /data/config/config.ini.php
+
+    # Add new settings after [QueuedTracking] header
+    sed -i "/^\[QueuedTracking\]/a\\
+queueEnabled = 1\\
+processDuringTrackingRequest = 0\\
+redisHost = \"${REDIS_HOST}\"\\
+redisPort = ${REDIS_PORT}\\
+redisDatabase = ${REDIS_DATABASE}\\
+redisTimeout = ${REDIS_TIMEOUT}" /data/config/config.ini.php
+  fi
+
+  # Add Redis password if set
+  if [ -n "$REDIS_PASSWORD" ]; then
+    sed -i "/^\[QueuedTracking\]/,/^\[/{
+      /^redisTimeout/a\\
+redisPassword = \"${REDIS_PASSWORD}\"
+    }" /data/config/config.ini.php
+  fi
+
+  echo "Redis configuration complete."
+fi
