@@ -37,6 +37,26 @@ RUN curl -sSL "https://plugins.matomo.org/api/2.0/plugins/Migration/download/5.0
   && unzip /tmp/Migration.zip -d plugins/ \
   && rm /tmp/Migration.zip
 
+RUN curl -sSL "https://plugins.matomo.org/api/2.0/plugins/ActivityLog/download/5.1.5" \
+  -o /tmp/ActivityLog.zip \
+  && unzip /tmp/ActivityLog.zip -d plugins/ \
+  && rm /tmp/ActivityLog.zip
+
+RUN curl -sSL "https://plugins.matomo.org/api/2.0/plugins/SecurityInfo/download/5.0.4" \
+  -o /tmp/SecurityInfo.zip \
+  && unzip /tmp/SecurityInfo.zip -d plugins/ \
+  && rm /tmp/SecurityInfo.zip
+
+RUN curl -sSL "https://plugins.matomo.org/api/2.0/plugins/ProtectTrackID/download/3.2.0" \
+  -o /tmp/ProtectTrackID.zip \
+  && unzip /tmp/ProtectTrackID.zip -d plugins/ \
+  && rm /tmp/ProtectTrackID.zip
+
+RUN curl -sSL "https://plugins.matomo.org/api/2.0/plugins/BotTracker/download/5.2.18" \
+  -o /tmp/BotTracker.zip \
+  && unzip /tmp/BotTracker.zip -d plugins/ \
+  && rm /tmp/BotTracker.zip
+
 # Copy premium plugins from build context (requires valid license in Matomo instance)
 COPY plugins/Funnels plugins/Funnels
 COPY plugins/UsersFlow plugins/UsersFlow
