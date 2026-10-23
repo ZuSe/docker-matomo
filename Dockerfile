@@ -90,6 +90,7 @@ RUN apk --update --no-cache add \
     php85-curl \
     php85-dom \
     php85-iconv \
+    php85-intl \
     php85-fpm \
     php85-gd \
     php85-gmp \
